@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Guia1 – Encontre tudo. Perto de você.</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container header-inner">
+      <div class="brand">
+        <img src="assets/guia1-logo.svg" alt="Guia1" class="logo">
+        <div class="brand-text">
+          <h1>Guia1</h1>
+          <p class="slogan">Tudo o que você procura, está aqui.</p>
+        </div>
+      </div>
+
+      <div class="search-area">
+        <input id="searchInput" class="search-input" placeholder="O que você procura? (ex: padaria, oficina)" />
+        <select id="categorySelect" class="search-select">
+          <option value="">Todas as categorias</option>
+          <option value="Alimentação">Alimentação</option>
+          <option value="Beleza">Beleza</option>
+          <option value="Saúde">Saúde</option>
+          <option value="Serviços">Serviços</option>
+          <option value="Comércio">Comércio</option>
+          <option value="Automotivo">Automotivo</option>
+          <option value="Profissionais Autônomos">Profissionais Autônomos</option>
+        </select>
+        <select id="citySelect" class="search-select">
+          <option value="">Todas as cidades</option>
+          <option value="Eunápolis">Eunápolis</option>
+        </select>
+        <button id="searchBtn" class="btn primary">Buscar</button>
+        <button id="promoteBtn" class="btn terracota">📍 DIVULGUE SEU NEGÓCIO</button>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="categories">
+      <h2>Categorias</h2>
+      <div class="cat-grid" id="catGrid"></div>
+    </section>
+
+    <section id="destaque" class="cards-section">
+      <h3>Empresas em destaque</h3>
+      <div id="cards" class="cards"></div>
+    </section>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div>
+          <strong>Guia1</strong> — Encontre tudo. Perto de você.
+          <p>contato: <a href="mailto:guia1.br@hotmail.com">guia1.br@hotmail.com</a></p>
+        </div>
+        <div class="links">
+          <a href="admin.html">Admin</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Modal form -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <h3 id="modalTitle">Divulgue seu negócio</h3>
+      <p>Preencha os dados. O cadastro será salvo para sua aprovação.</p>
+      <form id="adForm">
+        <div class="grid">
+          <label>Nome
+            <input required name="nome" id="f_nome" placeholder="Ex: Padaria do Zé" />
+          </label>
+          <label>Endereço
+            <input required name="endereco" id="f_endereco" placeholder="Rua, número" />
+          </label>
+          <label>Bairro
+            <input required name="bairro" id="f_bairro" placeholder="Bairro" />
+          </label>
+          <label>Cidade
+            <input required name="cidade" id="f_cidade" placeholder="Cidade" />
+          </label>
+          <label>Telefone
+            <input name="telefone" id="f_telefone" placeholder="(73) xxxx-xxxx" />
+          </label>
+          <label>WhatsApp
+            <input name="whatsapp" id="f_whatsapp" placeholder="(73) 9xxxx-xxxx" />
+          </label>
+          <label>E-mail
+            <input type="email" name="email" id="f_email" placeholder="contato@exemplo.com" />
+          </label>
+          <label>Descrição
+            <textarea name="descricao" id="f_descricao" rows="3" placeholder="Descreva os serviços"></textarea>
+          </label>
+          <label>Imagem (opcional)
+            <input name="imagem" id="f_imagem" type="file" accept="image/*" />
+          </label>
+        </div>
+
+        <div class="actions" style="margin-top:12px">
+          <button type="submit" class="btn primary">Enviar Cadastro</button>
+          <button type="button" class="btn" id="saveLocal">Salvar localmente (teste)</button>
+        </div>
+      </form>
+      <p class="note" style="margin-top:10px;color:var(--muted)">Observação: após o envio, o cadastro ficará pendente até sua aprovação no painel.</p>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">✅ Cadastro enviado com sucesso!</div>
+
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

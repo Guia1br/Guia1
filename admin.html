@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Guia1 Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container header-inner">
+      <div class="brand">
+        <img src="assets/guia1-logo.svg" alt="Guia1" class="logo">
+        <div class="brand-text">
+          <h1>Guia1 - Painel</h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="loginBox" class="admin-wrap">
+      <h3>Login administrador</h3>
+      <p>Digite a senha para acessar o painel.</p>
+      <input id="adminPass" type="password" placeholder="Senha">
+      <button id="loginBtn" class="btn primary">Entrar</button>
+      <p style="margin-top:8px;color:var(--muted)">Senha será solicitada toda vez.</p>
+    </div>
+
+    <div id="panel" style="display:none">
+      <div class="admin-wrap">
+        <h3>Cadastros</h3>
+        <table class="table" id="cadastroTable">
+          <thead><tr><th>Nome</th><th>Cidade</th><th>Categoria</th><th>Status</th><th>Ações</th></tr></thead>
+          <tbody id="cadastrosBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="firebase-config.js"></script>
+  <script>
+  const ADMIN_PASSWORD = "Lu32Iv75@";
+
+  function initAdmin(){
+    document.getElementById('loginBtn').addEventListener('click', ()=>{
+      const p = document.getElementById('adminPass').value;
+      if(p === ADMIN_PASSWORD){
+        document.getElementById('loginBox').style.display='none';
+        document.getElementById('panel').style.display='block';
+        startAdmin();
+      } else {
+        alert('Senha incorreta');
+      }
+    });
+  }
+
+  function startAdmin(){
+    const db = firebase.firestore();
+    const body = document.getElementById('cadastrosBody');
+    db.collection('cadastros').orderBy('createdAt','desc').onSnapshot(snap=>{
+      body.innerHTML = '';
+      snap.forEach(doc=>{
+        const d = doc.data();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${d.nome}</td>
+          <td>${d.cidade}</td>
+          <td>${d.categoria || ''}</td>
+          <td>${d.status || 'pending'}</td>
+          <td>
+            <button class="action-btn action-activate" onclick="changeStatus('${doc.id}','active')">Ativar</button>
+            <button class="action-btn action-silence" onclick="changeStatus('${doc.id}','silenced')">Silenciar</button>
+            <button class="action-btn action-delete" onclick="deleteDoc('${doc.id}')">Excluir</button>
+          </td>`;
+        body.appendChild(tr);
+      });
+    });
+  }
+
+  function changeStatus(id, status){
+    const db = firebase.firestore();
+    db.collection('cadastros').doc(id).update({status: status})
+      .then(()=> alert('Status atualizado'))
+      .catch(e=> alert('Erro: '+e.message));
+  }
+  function deleteDoc(id){
+    if(!confirm('Confirma exclusão?')) return;
+    const db = firebase.firestore();
+    db.collection('cadastros').doc(id).delete()
+      .then(()=> alert('Removido'))
+      .catch(e=> alert('Erro: '+e.message));
+  }
+
+  window.addEventListener('DOMContentLoaded', ()=>{
+    initAdmin();
+  });
+  </script>
+</body>
+</html>
